@@ -1,0 +1,141 @@
+#!/usr/bin/env node
+
+const mongoose = require('mongoose')
+const moment = require('moment')
+const dotenv = require('dotenv')
+const chalk = require('chalk')
+const path = require('path')
+const _ = require('lodash')
+
+const { DEV } = require('../constants').ENV
+const { FORMATS, FORMAT_DATE, FORMAT_DOMAIN } = require('../constants')
+const { log, parseDomain } = require('../helpers')
+const { ReadFile } = require('../io/reader')
+const { fetchDownloadHistories } = require('../helpers/importer')
+
+const DATE_FORMAT = 'HH:mm:ss DD-MM-YYYY'
+
+const env = process.env.NODE_ENV || DEV
+
+if (env === DEV) {
+  dotenv.load({ path: '.env' })
+}
+
+log(`process.env.MONGODB_URI: ${process.env.MONGODB_URI}`)
+mongoose.Promise = global.Promise
+mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true }, (error) => {
+  if (error) {
+    log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'))
+    process.exit()
+  }
+
+  insertDomains(done)
+})
+
+const INSERT_DOMAINS_LABEL = `Insert downloaded domains to database > `
+const insertDomains = async(done) => {
+  console.time(INSERT_DOMAINS_LABEL)
+  log(`Importing downloaded data to db result...`, 3)
+  const today = moment().format('DD-MM-YYYY')
+  const files = await fetchDownloadHistories(today)
+
+  if (files.length === 0) {
+    log(`Please download domains first`)
+    return []
+  }
+
+  const results = await Promise.all(files.map(f => {
+    return domainsToDBFromFile(f)
+  }))
+
+  log(`Done`, 1)
+  console.log(`Results: `, results)
+
+  const end = moment()
+  console.log(chalk.yellow(`[${end.format(DATE_FORMAT)}]`))
+  console.timeEnd(INSERT_DOMAINS_LABEL)
+  if (_.isFunction(done)) {
+    done(results)
+  } else {
+    return results
+  }
+}
+
+/**
+ * Insert domains to db from file
+ * {
+ *   domain,
+ *   date,
+ *   source,
+ *   type,
+ * }
+ * @param file 
+ */
+const domainsToDBFromFile = (file) => {
+  let startTime = moment()
+  let bulks = {}
+  console.time('importFileToDb > ' + file.absolutePath)
+  return ReadFile(file.absolutePath, (idx, line, next) => {
+      if (idx <= file.format.ignoreFirstLine) {
+        return next()
+      }
+      let typeIdx = _.indexOf(file.format.types, file.type)
+      file.format.dateFormat = file.format.dateFormats[typeIdx]
+      const fileFormat = {
+        ...file.format
+      }
+      if (file.type === 'Deleting Domains') {
+        fileFormat.format = `${FORMAT_DOMAIN} ${FORMAT_DATE}`
+      }
+      let domain = parseDomain(line, fileFormat)
+
+      if (!domain.date) {
+        let basename = path.basename(file.absolutePath).toLowerCase()
+        domain.date = basename.replace(/[a-zA-Z_\.]+/g, '')
+      }
+
+      if (!!domain.suffixes && /(\.com|\.net)$/.test(`${domain.domain}`)) {
+        if (!!domain.date) {
+          if (domain.date.indexOf("/") !== -1) {
+            domain.date = moment(new Date(domain.date)).format('YYYY-MM-DD')
+          } else {
+            domain.date = moment(domain.date, file.format.dateFormat).format('YYYY-MM-DD')
+          }
+        }
+        domain.source = file.service
+        domain.type = file.type
+        const month = moment(domain.date, 'YYYY-MM-DD').format('YYYY_MM')
+        let c = mongoose.connection.collection(`domains_${month}`)
+        if (!bulks[month]) {
+          bulks[month] = c.initializeUnorderedBulkOp({ useLegacyOps: true })
+        }
+        delete domain.suffixes
+        delete domain.domainWord
+        bulks[month].find({ domain: domain.domain, date: domain.date, source: domain.source, type: domain.type }).upsert().replaceOne(domain)
+        // console.log(`domain > `, domain)
+        if (domain.domain == 'Invalid date' || domain.domain == '') {
+          console.log(`domain > `, domain, `, file > `, file)
+          process.exit()
+        }
+      } else {
+        ignore = false
+      }
+
+      next()
+    })
+    .then(async(totalLine) => {
+      let line = totalLine > file.format.ignoreFirstLine ? (totalLine - file.format.ignoreFirstLine) : totalLine
+      console.log(`totalLine: ${line}, bulk: ${Object.keys(bulks)}`)
+      let endTime = moment()
+      const diff = endTime.diff(startTime)
+      if (Object.keys(bulks).length > 0) {
+        const results = await Promise.all(Object.keys(bulks).map(k => bulks[k].execute()))
+        return results
+      }
+      return 0
+    })
+}
+
+const done = () => {
+  process.exit(0)
+}

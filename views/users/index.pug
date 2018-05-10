@@ -1,0 +1,113 @@
+extends ../layout
+
+block styles
+block modal
+  modal(size='large', v-if='moveDomainToUser', :opened='moveDomainToUser', :header='false', class="hidden")
+    div(slot='body')
+      .row
+        .col-md-12
+          .card
+            .card-header.card-header-icon(data-background-color='blue')
+              i.material-icons supervisor_account
+            .card-content
+              h4.card-title Users List
+             
+    div(slot='footer')
+      button.btn.btn-success(type='button', @click='finalDeleteUser') Save
+      button.btn.btn-danger.btn-simple(type='button', @click='onCloseDeleteUser') Close
+block content
+  include ../partials/spinner
+  .container-fluid
+    .row
+      .col-md-7
+        .card
+          .card-header.card-header-icon(data-background-color='blue')
+            i.material-icons supervisor_account
+          .card-content
+            h4.card-title Users List
+            .table-responsive
+              table#datatables.table.table-striped.table-hover
+          .card-footer
+            .row
+                .col-md-12
+                  .btn-group.pull-right
+                    button.btn.btn-primary(v-if="showMoveDomains", type='button', @click='deleteUser') Move Domains
+      .col-md-5
+        .card
+          form.form-horizontal(method='get')
+            .card-header.card-header-text(data-background-color='rose')
+              h4.card-title Info
+            .card-content
+              .row
+                label.col-sm-3.label-on-left Username
+                .col-sm-9
+                  .form-group.label-floating.is-empty
+                    label.control-label
+                    input.form-control(type='hidden', v-model='user._id')
+                    input.form-control(id="username", type='text', v-model='user.username', :disabled="!isNewUser", required)
+              .row
+                label.col-sm-3.label-on-left Password
+                .col-sm-9
+                  .form-group.label-floating.is-empty
+                    label.control-label
+                    input.form-control(type='text', v-model='user.password',  required)      
+              .row
+                label.col-sm-3.label-on-left Full Name
+                .col-sm-9
+                  .form-group.label-floating.is-empty
+                    label.control-label
+                    input.form-control(type='text', v-model='user.profile.name')
+              .row
+                label.col-sm-3.label-on-left Email
+                .col-sm-9
+                  .form-group.label-floating.is-empty
+                    input.form-control(type='email', v-model="user.email", id ='email', required)
+              .row
+                label.col-sm-3.label-on-left Role
+                .col-sm-9
+                  .form-group.label-floating.is-empty
+                    select.form-control(v-model="user.role", :disabled="isAdmin")
+                      option(v-for="r in roles", :value="r.code") {{r.name}}
+              .row
+                label.col-sm-3.label-on-left Gender
+                .col-sm-4.checkbox-radios
+                  .checkbox
+                    label
+                      input(type='radio', name='optionsRadios', id='optionsRadios', value='Male', v-model='user.profile.gender')
+                      |  Male
+                .col-sm-5.checkbox-radios
+                  .checkbox
+                    label
+                      input(type='radio', name='optionsRadios', id='optionsRadios1', value='Female', v-model='user.profile.gender')
+                      |  Female
+              .row
+                label.col-sm-3.label-on-left Phone
+                .col-sm-9
+                  .form-group.label-floating.is-empty
+                    input.form-control(type='text', v-model='user.profile.phone', id='phone')
+              .row
+                label.col-sm-3.label-on-left Location
+                .col-sm-9
+                  .form-group.label-floating.is-empty
+                    input.form-control(type='text', v-model='user.profile.location', id='location')
+              .row
+                label.col-sm-3.label-on-left Website
+                .col-sm-9
+                  .form-group.label-floating.is-empty
+                    input.form-control(type='text', v-model = 'user.profile.website', id='website')
+              .row
+                .col-md-12
+                  .btn-group.pull-right
+                    button.btn.btn-success(type='button', @click='metClearFrom') New
+                    button.btn.btn-primary(type='button', @click='metSaveUser') Save
+                    button.btn.btn-warning(v-if="user.activeFlag", type='button', @click='metDisableUser') Disable
+                    button.btn.btn-success(v-if="!user.activeFlag", type='button', @click='metEnableUser') Enable
+                    button.btn.btn-danger(type='button', @click='deleteUser') Delete
+                    
+block scripts
+  script(src='/assets/js/jquery.datatables.js')
+  script(src='https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js')
+  script(src='//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js')
+  script(src='//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js')
+  script(src='//cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js')

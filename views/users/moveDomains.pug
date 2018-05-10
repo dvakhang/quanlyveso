@@ -1,0 +1,38 @@
+extends ../layout
+
+block styles
+  style.
+    #datatables tr td:first-child {
+        padding-left: 0 !important;
+    }
+block content
+  include ../partials/spinner
+  input(type="hidden", ref="userId", v-model="userId", data-value=curUser._id)
+  .container-fluid
+    .row
+      .col-md-12
+        .card
+          .card-header.card-header-icon(data-background-color='blue')
+            i.material-icons domain
+          .card-content
+            h4.card-title 
+              | Select domains to move from 
+              b #{curUser.profile.name} 
+              | to other saler
+            table#datatables.table.table-responsive
+          .card-footer
+            .row(style="width:100%")
+              .col-md-12
+                .form-footer.text-right
+                  select.form-control(v-model="selectedSaler", style="width:200px;")
+                    option(v-for="saler in salers", :key="saler._id", :value="saler") {{saler.profile.name}}
+                  button.btn.btn-rose.btn-fill.text-right(@click="moveDomainsToUser")
+                    span Move to 
+                    i.material-icons keyboard_arrow_right
+                    b {{moveToName}}
+                  button.btn.btn-danger.btn-fill.text-right(@click="moveAllDomainsToUser")
+                    span MOVE ALL TO 
+                    i.material-icons keyboard_arrow_right
+                    b {{moveToName}}
+                  button.btn.btn-danger.btn-fill.text-right(v-if="allowDelete", @click="deleteSaler") DELETE #{curUser.profile.name}
+block scripts

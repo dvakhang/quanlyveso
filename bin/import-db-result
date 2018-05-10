@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+const mongoose = require('mongoose')
+const moment = require('moment')
+const dotenv = require('dotenv')
+const chalk = require('chalk')
+const path = require('path')
+
+const { DEV } = require('../constants').ENV
+const { ImportToDBResult } = require('../helpers/importer')
+const { log } = require('../helpers')
+
+const DATE_FORMAT = 'HH:mm:ss DD-MM-YYYY'
+
+const env = process.env.NODE_ENV || DEV
+
+if (env === DEV) {
+  dotenv.load({ path: '.env' })
+}
+
+log(`process.env.MONGODB_URI: ${process.env.MONGODB_URI}`)
+mongoose.Promise = global.Promise
+mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true }, (error) => {
+  if (error) {
+    log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'))
+    process.exit()
+  }
+
+  ImportToDBResult(done)
+})
+
+const done = () => {
+  process.exit(0)
+}

@@ -1,0 +1,81 @@
+extends ../layout
+
+block styles
+  link(href='/vendor/dropzone/dropzone.min.css', rel='stylesheet')
+
+block content
+    include ../partials/spinner
+    .container-fluid
+      .row
+        .col-md-8
+          .card
+            .card-header.card-header-icon(data-background-color='rose')
+              i.material-icons perm_identity
+            .card-content
+              h4.card-title
+                | Edit Profile -
+                small.category Complete your profile
+              form
+                .row
+                  .col-md-6
+                    .form-group
+                      label.control-label Username
+                      input.form-control(type='text',v-model='user.username')
+                  .col-md-6
+                    .form-group
+                      label.control-label Email address
+                      input.form-control(type='email', v-model='user.email')
+                .row
+                  .col-md-12
+                    .form-group
+                      label.control-label Full Name
+                      input.form-control(type='text', v-model='user.profile.name')
+                .row
+                  .col-md-12
+                    .form-group
+                      label.control-label Address
+                      input.form-control(type='text', v-model='user.profile.location')
+                .row
+                  .col-md-12
+                    .form-group
+                      .form-group
+                        label.control-label  About Me
+                        textarea.form-control(rows='5',v-model='user.profile.about')
+                button.btn.btn-rose.pull-right(type='button', @click='updateUser') Update Profile
+                .clearfix
+        .col-md-4
+          .card.card-profile
+            .card-avatar
+              a(href='#pablo')
+                img.img(src='../../assets/img/faces/marc.jpg')
+            .card-content
+              h4.card-title {{user.username}}
+                 h5.card-title {{user.profile.about}}
+
+        .container-fluid
+             .row
+                .col-md-8
+                  .card
+                    .card-header.card-header-icon(data-background-color='rose')
+                      i.material-icons perm_identity
+                    .card-content
+                      h4.card-title
+                        | Edit Password
+                      form
+                        .row
+                          .col-md-12
+                            .form-group
+                              label.control-label Old Password
+                              input.form-control(type='text',v-model='user.oldPass')
+                        .row
+                          .col-md-12
+                            .form-group
+                              label.control-label New Password
+                              input.form-control(type='text', v-model='user.newPass')
+                        button.btn.btn-rose.pull-right(type='button', @click='updatePassword') Change Password
+             .clearfix
+
+
+
+block scripts
+  script(src='/assets/js/material-dashboard.js')

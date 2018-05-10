@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+const mongoose = require('mongoose')
+const moment = require('moment')
+const dotenv = require('dotenv')
+const chalk = require('chalk')
+const path = require('path')
+const _ = require('lodash')
+
+const { DEV } = require('../constants').ENV
+const { log } = require('../helpers')
+const { distributeDomains } = require('../services/DistributeDomainService')
+
+const VN_TIME_FORMAT = 'HH:mm:ss DD-MM-YYYY'
+const DATE_FORMAT = 'YYYY-MM-DD'
+
+const env = process.env.NODE_ENV || DEV
+
+if (env === DEV) {
+  dotenv.load({ path: '.env' })
+}
+
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason)
+  // application specific logging, throwing an error, or other logic here
+})
+
+log(`process.env.MONGODB_URI: ${process.env.MONGODB_URI}`)
+mongoose.Promise = global.Promise
+mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true }, (error) => {
+  if (error) {
+    log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'))
+    process.exit()
+  }
+  distributeDomains().then((data) => {
+    const { preOrders, distributedDomains } = data
+    log(`[Completed] distributeDomains!`, 1)
+    done()
+  })
+})
+
+const done = () => {
+  process.exit(0)
+}

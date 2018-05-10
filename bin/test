@@ -1,0 +1,103 @@
+#!/usr/bin/env node
+
+const mongoose = require('mongoose')
+const moment = require('moment')
+const dotenv = require('dotenv')
+const chalk = require('chalk')
+const path = require('path')
+
+const { DEV } = require('../constants').ENV
+const { log } = require('../helpers')
+
+const env = process.env.NODE_ENV || DEV
+
+if (env === DEV) {
+  dotenv.load({ path: '.env' })
+}
+
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason)
+})
+
+log(`process.env.MONGODB_URI: ${process.env.MONGODB_URI}`)
+mongoose.Promise = global.Promise
+mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true }, (error) => {
+  if (error) {
+    log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'))
+    process.exit()
+  }
+
+  run(done)
+})
+
+const { find, reformatDate, moveAllData } = require('../services/DBVNService')
+const { removeAllDomains } = require('../services/DistributeDomainService')
+const { fetchDownloadHistories } = require("../services")
+const {
+  sendDailyDownloadHistories,
+  sendDailyDistributedDomains,
+} = require("../services/ReportService")
+const { reDistributedOrderSaler } = require('../services/UserService')
+
+// Need To Remove (S)
+const DistributeDomain = require('../models/DistributeDomain')
+const Customer = require('../models/Customer')
+// Need To Remove (E)
+
+const run = async(done) => {
+  // const results = await find({
+  //   page: {
+  //     skip: 0,
+  //     size: 100,
+  //   },
+  //   query: ''
+  //})
+  // await reformatDate()
+  // await moveAllData()
+  // await removeAllDomains()
+  // const histories = await fetchDownloadHistories(moment().format("DD-MM-YYYY"))
+  // const results = await sendDailyDownloadHistories()
+  // const results = await sendDailyDistributedDomains()
+  // console.log(`sendDailyDistributedDomains > `, results)
+
+  // const [customers, domains] = await Promise.all([
+  //   Customer.find({}),
+  //   DistributeDomain.find({})
+  // ])
+
+  // console.log(`customers: `, customers.length)
+
+  // domains.forEach(async(d) => {
+  //   if (d.customers.length > 0) {
+  //     const xxx = await Promise.all(d.customers.map(cId => addCreatedBy(cId.customer, d.saler)))
+  //     console.log(xxx)
+  //   }
+  // })
+  // const results = await Promise.all(domains.map(d => addCreatedByCustomers(d.customers, d.saler)))
+  // console.log(`OK > `, results)
+  const results = await reDistributedOrderSaler()
+  console.log(`reDistributedOrderSaler > `, results)
+  done()
+}
+
+const addCreatedByCustomers = (customers, createdBy) => {
+  return Promise.all(customers.map(cId => addCreatedBy(cId.customer, createdBy)))
+}
+
+const addCreatedBy = async(cId, createdBy) => {
+  try {
+    const c = await Customer.findOne({ _id: cId })
+    console.log(`addCreatedBy: `, c)
+    if (!c) {
+      return Promise.resolve(false)
+    }
+    c.createdBy = createdBy
+    return c.save()
+  } catch (error) {
+    console.log(`error: `, error)
+  }
+}
+
+const done = () => {
+  process.exit(0)
+}

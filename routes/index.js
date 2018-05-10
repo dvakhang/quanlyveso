@@ -1,0 +1,51 @@
+const express = require('express')
+const router = express.Router()
+const moment = require('moment')
+const multer = require('multer')
+const mime = require('mime')
+const { check } = require('express-validator/check')
+
+const { SIGN_IN, SIGN_OUT, FORGOT, RESET } = require('../constants').URLS
+const { mkdirSync } = require('../helpers')
+const passportConfig = require('../config/passport')
+const RequireAuthenticated = passportConfig.isAuthenticated
+const IsSaler = passportConfig.isSaler
+const homeController = require('../controllers/HomeController')
+const authController = require('../controllers/AuthController')
+const userController = require('../controllers/UserController')
+const pageInfoController = require('../controllers/PageInfoController')
+const screenController = require('../controllers/ScreenController')
+
+router.get(SIGN_IN, authController.getSignIn)
+router.post(SIGN_IN, authController.postSignIn)
+router.get(SIGN_OUT, authController.signOut)
+
+// APIs
+router.get('/api/me', userController.me)
+
+router.route('/api/users')
+  .post(userController.getUsers)
+
+router.route('/api/users-add')
+  .post(userController.addUsers)
+
+// router.get('/api/getUserInfo', dashboardController.getUserInfo)
+router.post('/api/deleteUser', userController.deleteUser)
+
+/**
+ * Screen APIs
+ */
+router.route('/api/screens')
+  .get(screenController.getScreens)
+
+
+router.post('/api/getLoginUser', pageInfoController.getUser)
+router.route('/api/updateUser')
+  .post(pageInfoController.updateUser)
+router.route('/api/updatePassword')
+  .post(pageInfoController.updatePassword)
+
+router.get('/', homeController.getIndex)
+router.get('/users', userController.getUsersView)
+
+module.exports = router
