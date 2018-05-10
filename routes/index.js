@@ -14,7 +14,7 @@ const homeController = require('../controllers/HomeController')
 const authController = require('../controllers/AuthController')
 const userController = require('../controllers/UserController')
 const pageInfoController = require('../controllers/PageInfoController')
-const screenController = require('../controllers/ScreenController')
+const dailyController = require('../controllers/DailyController')
 
 router.get(SIGN_IN, authController.getSignIn)
 router.post(SIGN_IN, authController.postSignIn)
@@ -32,13 +32,6 @@ router.route('/api/users-add')
 // router.get('/api/getUserInfo', dashboardController.getUserInfo)
 router.post('/api/deleteUser', userController.deleteUser)
 
-/**
- * Screen APIs
- */
-router.route('/api/screens')
-  .get(screenController.getScreens)
-
-
 router.post('/api/getLoginUser', pageInfoController.getUser)
 router.route('/api/updateUser')
   .post(pageInfoController.updateUser)
@@ -47,5 +40,7 @@ router.route('/api/updatePassword')
 
 router.get('/', homeController.getIndex)
 router.get('/users', userController.getUsersView)
+
+router.get('/quanlydaily', dailyController.getIndex)
 
 module.exports = router
