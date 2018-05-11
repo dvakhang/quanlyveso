@@ -14,7 +14,7 @@ const homeController = require('../controllers/HomeController')
 const authController = require('../controllers/AuthController')
 const userController = require('../controllers/UserController')
 const pageInfoController = require('../controllers/PageInfoController')
-const dailyController = require('../controllers/DailyController')
+const agentController = require('../controllers/AgentController')
 
 router.get(SIGN_IN, authController.getSignIn)
 router.post(SIGN_IN, authController.postSignIn)
@@ -41,6 +41,8 @@ router.route('/api/updatePassword')
 router.get('/', homeController.getIndex)
 router.get('/users', userController.getUsersView)
 
-router.get('/quanlydaily', dailyController.getIndex)
+router.get('/agent', agentController.getIndex)
+router.route('/api/agents1')
+  .post(agentController.getAgents)
 
 module.exports = router

@@ -17,8 +17,8 @@ function getMe() {
   })
 }
 
-function initDatatable(options, onRowClick) {
-  let tbId = '#datatables'
+function initDatatable(options, onRowClick, tbId) {
+  // let tbId = '#datatables'
   if (window.app && window.app.$datatable) {
     window.app.$datatable.destroy()
     $(`${tbId}`).empty()

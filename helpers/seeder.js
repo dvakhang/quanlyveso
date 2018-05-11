@@ -10,6 +10,7 @@ const faker = require('faker')
 const moment = require('moment')
 
 const User = require('../models/User')
+const Agent = require('../models/Agent')
 
 const {
   log
@@ -40,13 +41,53 @@ const createUsers = (roles) => {
   });
 };
 
+const createAgents = () => {
+  return Agent.count().then(count => {
+    if (count > 0) {
+      return;
+    }
+
+    let agents = [{
+      code: 'TRANTP',
+      website: '',
+      email: '',
+      remark: '',
+      name: 'Lý Uyển Trân',
+      phone: '',
+      parrent: '0',
+      activated: 'true'
+    },
+    {
+      code: 'TRUNGTP',
+      website: '',
+      email: '',
+      remark: '',
+      name: 'Nguyễn Chí Trung',
+      phone: '',
+      parrent: '0',
+      activated: 'true'
+    },
+    {
+      code: 'KHAITP',
+      website: '',
+      email: '',
+      remark: '',
+      name: 'Lê Quang Khải',
+      phone: '',
+      parrent: 'TRANTP',
+      activated: 'true'
+    }];
+    return Promise.all(agents.map(c => Agent.create(c)))
+  });
+};
+
 const seedData = async() => {
   log(`Seeding data...`, 3)
   return Promise.all([
     createUsers(),
+    createAgents()
   ]).then(async(data) => {
     const users = data[0]
-    
     if (users) {
       log(`Created ${users.length} users`, 1)
     }

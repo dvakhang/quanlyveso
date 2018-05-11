@@ -29,11 +29,8 @@ html(lang='en')
         block clock
   include partials/scripts
   script(src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js')
-  script(src='/assets/js/components/modal.js?v=' + version)
-  script(src='/assets/js/components/customer.js?v=' + version)
-  script(src='/assets/js/core.js?v=' + version)
+  script(src='/assets/js/components/modal.js')
+  script(src='/assets/js/components/customer.js')
+  script(src='/assets/js/core.js')
   block scripts
-  if activePage != '' && !(!!js_path)
-    script(src='/assets/pages/' + activePage + '.js?v=' + version)
-  if js_path && js_path != ''
-    script(src='/assets/pages/' + js_path + '.js?v=' + version)
+  script(src='/assets/pages/' + activePage + '.js')

@@ -1,0 +1,68 @@
+extends ../layout
+
+block styles
+
+block content
+  include ../partials/spinner
+  .container-fluid
+    .row
+        .col-md-12
+            .card
+            .card-header.card-header-icon(data-background-color='red')
+                i.material-icons domain
+            .card-header
+                h4.card-title Quản lý đại lý
+            .card-content
+                .row
+                .col-md-12
+                    .btn-group
+                    button.btn.btn-success(type='button', @click='metAddAgent') Add
+                    button.btn.btn-warning(v-if='allowEditAndDeleteDomain', type='button', @click='metShowEditAgent') Edit
+                    button.btn.btn-danger(v-if='allowEditAndDeleteDomain', type='button', @click='metDeleteAgent') Delete
+                .row
+                    .col-md-6
+                        .table-responsive
+                            table#datatables.table.table-striped.table-hover
+                    .col-md-6
+                        .table-responsive
+                            table#datatables1.table.table-striped.table-hover
+        #panel-customer.col-md-9.off
+            .card
+                .scroll-right(@click="closeAgent2")
+                    i.material-icons.text-primary close
+                .card-header.card-header-icon(data-background-color='red')
+                    i.material-icons supervisor_account
+                .card-header
+                    h4.card-title 
+                        b Đại lý cấp 1: {{selectedAgent.name}} 
+                .card-content
+                    .row
+                        .col-sm-12
+                            .form-group(style="padding-top:0;margin-top:0")
+                                textarea.form-control(type='text', v-model='selectedAgent.remark', name='remark', rows='3', placeholder='Enter remark here...')
+                    .row
+                        .col-md-10
+                            .btn-group
+                                button.btn.btn-success.btn-sm(@click="saveRemark") Save Remark
+                    .table-responsive(v-if="showContacts")
+                        table.table.table-striped.table-hover.dataTable.customers
+                            thead.text-primary
+                                tr
+                                    th Mã Đại Lý
+                                    th Tên
+                                    th Phone
+                                    th Email
+                                    th Địa chỉ
+                            tbody
+                                tr(v-for="c in agents2", :key="c._id", :class="[c._id]", @click="onAgent2Select(c)")
+                                    td {{c.code}}
+                                    td {{c.name}}
+                                    td {{c.phone}}
+                                    td {{c.email}}
+                                    td {{c.address}}
+                .card-footer(v-if="showControlButtons")
+                    .row
+                        .col-md-12
+                            .btn-group
+                                button.btn.btn-warning(v-if='allowEditAndDelete', type='button', @click='metShowAgent2Modal(false)') Edit
+            

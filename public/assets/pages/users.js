@@ -89,7 +89,6 @@ window.app = new Vue({
   },
 
   mounted() {
-    this.metGetRoles()
     // this.initDatatable()
     this.getUsers()
   },
@@ -256,15 +255,7 @@ window.app = new Vue({
       this.user.activeFlag = true
       this.metSaveUser()
     },
-
-    metGetRoles() {
-      this.waiting = true
-      axios.get('/api/roles').then((response) => {
-        this.waiting = false
-        this.roles = response.data
-      })
-    },
-
+    
     showMoveDomains() {
 
     }

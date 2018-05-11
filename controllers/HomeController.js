@@ -13,7 +13,7 @@ const getIndex = (req, res) => {
   console.log('user ', req.user)
   if(req.user){
     console.log('uerrrrrrrrrrrrrrrr')
-    return res.redirect('/users')
+    return res.redirect('/agent')
   }else{
     console.log('singiiiiiiiiiiiiiiii')
     return res.redirect('/signin')
