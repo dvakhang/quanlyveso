@@ -120,6 +120,18 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
 app.use((req, res, next) => {
+  // After successful login, redirect back to the intended page
+  if (!req.user &&
+    req.path !== '/signin' &&
+    req.path !== '/signup' && !req.path.match(/^\/auth/) && !req.path.match(/\./)) {
+    req.session.returnTo = req.path
+  } else if (req.user &&
+    req.path === '/account') {
+    req.session.returnTo = req.path
+  }
+  next()
+})
+app.use((req, res, next) => {
   if (req.path.startsWith('/api') || req.path.startsWith('/auth')) {
     next()
   } else {
@@ -132,18 +144,6 @@ app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
-app.use((req, res, next) => {
-  // After successful login, redirect back to the intended page
-  if (!req.user &&
-    req.path !== '/signin' &&
-    req.path !== '/signup' && !req.path.match(/^\/auth/) && !req.path.match(/\./)) {
-    req.session.returnTo = req.path
-  } else if (req.user &&
-    req.path === '/account') {
-    req.session.returnTo = req.path
-  }
-  next()
-})
 
 /**
  * Serve static files

@@ -14,6 +14,7 @@ const agentSchema = new mongoose.Schema({
   phone: String,
   parrent: String,
   address: String,
+  represent: String,
   activated: {
     type: String,
     default: true,

@@ -1,4 +1,5 @@
 const AgentService = require('../services/AgentService')
+const { matchedData } = require('express-validator/filter')
 
 /**
  * Api get all screens
@@ -46,8 +47,25 @@ const getAgents2 = async(req, res, next) => {
   }
 }
 
+const saveAgent = async(req, res) => {
+  const a = matchedData(req)
+  //check exist agent code
+  const agentMatch = await AgentService.findOneAgent(a);
+  if (!agentMatch) {
+    try {
+      const agent = await AgentService.saveAgent(a)
+      res.status(200).json(agent)
+    } catch (error) {
+      res.status(500).json({ message: `Could not save agent: ${error.message}` })
+    }
+  } else {
+    return res.status(500).json({ message: 'This agent code was created' })
+  }
+}
+
 module.exports = {
   getIndex,
   getAgents,
-  getAgents2
+  getAgents2,
+  saveAgent
 }

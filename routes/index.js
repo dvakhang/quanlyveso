@@ -47,4 +47,7 @@ router.route('/api/agents1')
 router.route('/api/agents2')
   .post(agentController.getAgents2)
 
+router.route('/api/saveAgent')
+  .post(agentController.saveAgent)
+
 module.exports = router

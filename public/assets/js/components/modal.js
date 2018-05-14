@@ -4,23 +4,20 @@ let Modal = (function() {
       <transition name="modal">
         <div class="modal fade in" tabindex="-1" role="dialog" style="display:block" v-if="selfOpened">
           <div :class="['modal-dialog', 'modal-'+ size]">
-            <div class="modal-content">
-
+            <div class="modal-content">              
               <div v-if="header" class="modal-header">
                 <slot name="header">
                   default header
                 </slot>
               </div>
-
+              <div style="text-align: right">
+              <slot name="footer">
+                <button type="button" class="btn btn-danger btn-simple" @click="onClose">Close</button>
+              </slot>
+            </div>
               <div class="modal-body">
                 <slot name="body">
                   default body
-                </slot>
-              </div>
-
-              <div class="modal-footer">
-                <slot name="footer">
-                  <button type="button" class="btn btn-danger btn-simple" @click="onClose">Close</button>
                 </slot>
               </div>
             </div>

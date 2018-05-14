@@ -6,38 +6,53 @@ window.app = new Vue({
       waiting: false,
       agents1: [],
       agents2: [],
+      agent: {
+        code: '',
+        name: '',
+        address: '',
+        email: '',
+        phone: '',
+        website: '',
+        remark: '',
+        represent: '',
+        parrent: ''
+      },
+      agentType: '',
       allowModify: false,
       allowEditAndDeleteDomain: false,
       allowEditAndDelete: false,
       basicColumns: [{
-          data: 'code',
-          title: 'Mã Đại Lý',
-          orderable: false,
-        },
-        {
-          data: 'name',
-          title: 'Tên Đại Lý',
-          orderable: false,
-        },
-        {
-          data: 'address',
-          title: 'Địa chỉ',
-          orderable: false,
-        },
-        {
-          data: 'phone',
-          title: 'SĐT',
-          orderable: false,
-        },
-        {
-          data: 'remark',
-          title: 'Ghi chú',
-          orderable: false,
-        }
+        data: 'code',
+        title: 'Mã Đại Lý',
+        orderable: false,
+      },
+      {
+        data: 'name',
+        title: 'Tên Đại Lý',
+        orderable: false,
+      },
+      {
+        data: 'address',
+        title: 'Địa chỉ',
+        orderable: false,
+      },
+      {
+        data: 'phone',
+        title: 'SĐT',
+        orderable: false,
+      },
+      {
+        data: 'remark',
+        title: 'Ghi chú',
+        orderable: false,
+      }
       ],
       me: {},
       selectedAgent: {},
-      selectedAgent2: {}
+      selectedAgent2: {},
+      showAgentModal: false,
+      showAddAgent: false,
+      editAgent: false
     }
   },
 
@@ -58,6 +73,11 @@ window.app = new Vue({
     showControlButtons() {
       return this.allowModify
     }
+  },
+
+  components: {
+    Modal,
+    vAddagent,
   },
 
   mounted() {
@@ -90,8 +110,14 @@ window.app = new Vue({
       }
     },
 
+    metShowEditAgent() {
+      this.editAgent = true
+      this.showAddAgent = true
+    },
+
     getAgent2(agent) {
       this.waiting = true
+      this.allowEditAndDelete = false
       axios.post('/api/agents2', {
         parrent: this.selectedAgent.code
       }).then((response) => {
@@ -114,14 +140,15 @@ window.app = new Vue({
     },
 
     metAddAgent() {
-
-    },
-
-    metShowEditAgent() {
-
+      this.agent.parrent = '0'
+      this.showAgentModal = true
     },
 
     metDeleteAgent() {
+
+    },
+
+    metDeleteAgent2() {
 
     },
 
@@ -141,13 +168,12 @@ window.app = new Vue({
       this.allowEditAndDelete = true
     },
 
-    metShowAgent2Modal(insert) {
-      this.showCustomerModal = true
+    metShowAgentModal(insert) {
+      this.showAgentModal = true
       if (!insert) {
-        this.customer = this.selectedCustomer
-        this.customer.domain = this.selectedDomain.domain
+        this.agent = this.selectedAgent2
       } else {
-        this.customer = {
+        this.agent = {
           domain: this.selectedDomain.domain,
           company: '',
           website: '',
@@ -161,5 +187,15 @@ window.app = new Vue({
         }
       }
     },
+
+    onAgentModalClose() {
+      this.showAgentModal = false
+      this.getAgent1Domains()
+    },
+
+    onCloseAddAgent() {
+      this.showAddAgent = false
+      this.getAgent1Domains()
+    }
   }
 });

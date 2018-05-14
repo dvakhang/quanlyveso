@@ -2,6 +2,14 @@ extends ../layout
 
 block styles
 
+block modal
+  modal(size="large", v-if='showAgentModal', @close='onAgentModalClose', :opened="showAgentModal", :header="false")
+    div(slot='body')
+      v-addagent(:agent="agent")
+  modal(size="large", v-if='showAddAgent', @close='onCloseAddAgent', :opened="showAddAgent", :header="false")
+    div(slot='body')
+      v-addagent(:agent='agent', :edit-agent='editAgent')
+
 block content
   include ../partials/spinner
   .container-fluid
@@ -31,7 +39,7 @@ block content
                     i.material-icons supervisor_account
                 .card-header
                     h4.card-title 
-                        b Đại lý cấp 1: {{selectedAgent.name}} 
+                        b Đại lý cấp 2 của: {{selectedAgent.name}} 
                 .card-content
                     .row
                         .col-sm-12
@@ -61,5 +69,7 @@ block content
                     .row
                         .col-md-12
                             .btn-group
-                                button.btn.btn-warning(v-if='allowEditAndDelete', type='button', @click='metShowAgent2Modal(false)') Edit
+                                button.btn.btn-success(type='button', @click='metShowAgentModal(true)') Add
+                                button.btn.btn-warning(v-if='allowEditAndDelete', type='button', @click='metShowAgentModal(false)') Edit
+                                button.btn.btn-danger(v-if='allowEditAndDelete', type='button', @click='metDeleteAgent2') Delete
             
