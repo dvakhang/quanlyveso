@@ -8,24 +8,21 @@ block content
     .row
         .col-md-12
             .card
-            .card-header.card-header-icon(data-background-color='red')
-                i.material-icons domain
-            .card-header
-                h4.card-title Quản lý đại lý
-            .card-content
-                .row
-                .col-md-12
-                    .btn-group
-                    button.btn.btn-success(type='button', @click='metAddAgent') Add
-                    button.btn.btn-warning(v-if='allowEditAndDeleteDomain', type='button', @click='metShowEditAgent') Edit
-                    button.btn.btn-danger(v-if='allowEditAndDeleteDomain', type='button', @click='metDeleteAgent') Delete
-                .row
-                    .col-md-6
-                        .table-responsive
-                            table#datatables.table.table-striped.table-hover
-                    .col-md-6
-                        .table-responsive
-                            table#datatables1.table.table-striped.table-hover
+                .card-header.card-header-icon(data-background-color='red')
+                    i.material-icons domain
+                .card-header
+                    h4.card-title Quản lý đại lý
+                .card-content
+                    .row
+                        .col-md-12
+                            .btn-group
+                                button.btn.btn-success(type='button', @click='metAddAgent') Add
+                                button.btn.btn-warning(v-if='allowEditAndDeleteDomain', type='button', @click='metShowEditAgent') Edit
+                                button.btn.btn-danger(v-if='allowEditAndDeleteDomain', type='button', @click='metDeleteAgent') Delete
+                    .row
+                        .col-md-12
+                            .table-responsive
+                                table#datatables.table.table-striped.table-hover
         #panel-customer.col-md-9.off
             .card
                 .scroll-right(@click="closeAgent2")

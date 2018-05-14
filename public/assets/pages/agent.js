@@ -20,6 +20,16 @@ window.app = new Vue({
           orderable: false,
         },
         {
+          data: 'address',
+          title: 'Địa chỉ',
+          orderable: false,
+        },
+        {
+          data: 'phone',
+          title: 'SĐT',
+          orderable: false,
+        },
+        {
           data: 'remark',
           title: 'Ghi chú',
           orderable: false,
@@ -81,9 +91,13 @@ window.app = new Vue({
     },
 
     getAgent2(agent) {
-      this.agents2 = [{
-        name: 'test'
-      }]
+      this.waiting = true
+      axios.post('/api/agents2', {
+        parrent: this.selectedAgent.code
+      }).then((response) => {
+        this.waiting = false
+        this.agents2 = response.data
+      })
     },
 
     onRowDblClick(index, domain) {

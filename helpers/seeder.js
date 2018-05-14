@@ -53,6 +53,7 @@ const createAgents = () => {
       email: '',
       remark: '',
       name: 'Lý Uyển Trân',
+      address: 'Bến Tre',
       phone: '',
       parrent: '0',
       activated: 'true'
@@ -63,6 +64,7 @@ const createAgents = () => {
       email: '',
       remark: '',
       name: 'Nguyễn Chí Trung',
+      address: 'Bến Tre',
       phone: '',
       parrent: '0',
       activated: 'true'
@@ -73,6 +75,7 @@ const createAgents = () => {
       email: '',
       remark: '',
       name: 'Lê Quang Khải',
+      address: 'Bến Tre',
       phone: '',
       parrent: 'TRANTP',
       activated: 'true'

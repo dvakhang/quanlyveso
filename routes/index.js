@@ -44,5 +44,7 @@ router.get('/users', userController.getUsersView)
 router.get('/agent', agentController.getIndex)
 router.route('/api/agents1')
   .post(agentController.getAgents)
+router.route('/api/agents2')
+  .post(agentController.getAgents2)
 
 module.exports = router
