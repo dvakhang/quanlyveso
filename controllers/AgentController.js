@@ -7,7 +7,7 @@ const { matchedData } = require('express-validator/filter')
  * @param {*} req 
  * @param {*} res 
  */
-const getIndex = async(req, res) => {
+const getIndex = async (req, res) => {
   const model = {
     title: "Quản lý đại lý"
   }
@@ -15,7 +15,7 @@ const getIndex = async(req, res) => {
   res.render('agent/index')
 }
 
-const getAgents = async(req, res, next) => {
+const getAgents = async (req, res, next) => {
   try {
     const data = []
     const agents = await AgentService.getAgents().then((d) => {
@@ -31,7 +31,7 @@ const getAgents = async(req, res, next) => {
   }
 }
 
-const getAgents2 = async(req, res, next) => {
+const getAgents2 = async (req, res, next) => {
   try {
     const parrent = req.body.parrent
     const agents = await AgentService.getAgents2(parrent).then((d) => {
@@ -47,10 +47,16 @@ const getAgents2 = async(req, res, next) => {
   }
 }
 
-const saveAgent = async(req, res) => {
-  const a = matchedData(req)
+const saveAgent = async (req, res) => {
+  // const a = matchedData(req)
+  const a = req.body
   //check exist agent code
-  const agentMatch = await AgentService.findOneAgent(a);
+  let agentMatch;
+  if (a.newAgent) {
+    agentMatch = await AgentService.findOneAgent(a);
+  } else {
+    agentMatch = false
+  }
   if (!agentMatch) {
     try {
       const agent = await AgentService.saveAgent(a)
@@ -63,9 +69,20 @@ const saveAgent = async(req, res) => {
   }
 }
 
+const deleteAgent = async (req, res) => {
+  const { code } = matchedData(req)
+  try {
+    const d = await AgentService.deleteAgent(code)
+    res.status(200).json(d)
+  } catch (error) {
+    res.status(500).json({ message: `Could not delete agent: ${error.message}` })
+  }
+}
+
 module.exports = {
   getIndex,
   getAgents,
   getAgents2,
-  saveAgent
+  saveAgent,
+  deleteAgent
 }

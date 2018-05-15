@@ -10,14 +10,14 @@ let Modal = (function() {
                   default header
                 </slot>
               </div>
-              <div style="text-align: right">
-              <slot name="footer">
-                <button type="button" class="btn btn-danger btn-simple" @click="onClose">Close</button>
-              </slot>
-            </div>
               <div class="modal-body">
                 <slot name="body">
                   default body
+                </slot>
+              </div>
+              <div class="modal-footer">
+                <slot name="footer">
+                  <button type="button" class="btn btn-danger btn-simple" @click="onClose">Close</button>
                 </slot>
               </div>
             </div>

@@ -49,5 +49,10 @@ router.route('/api/agents2')
 
 router.route('/api/saveAgent')
   .post(agentController.saveAgent)
+router.delete('/api/deleteAgent' , [
+  check('code').not().isEmpty().withMessage('Could not be blank')
+], agentController.deleteAgent)  
+
+  
 
 module.exports = router

@@ -24,15 +24,21 @@ const findOneAgent = async (a) => {
 
 const saveAgent = (agent) => {
   agent._id = agent._id || new ObjectId()
-  return Customer.findOneAndUpdate({ _id: agent._id }, { $set: agent }, { upsert: true })
+  return Agent.findOneAndUpdate({ _id: agent._id }, { $set: agent }, { upsert: true })
     .then(() => {
       return agent
     })
+}
+
+const deleteAgent = async (code) => {
+  await Agent.deleteMany({ parrent: code })
+  return await Agent.findOneAndRemove({ code: code })
 }
 
 module.exports = {
   getAgents,
   getAgents2,
   findOneAgent,
-  saveAgent
+  saveAgent,
+  deleteAgent
 }

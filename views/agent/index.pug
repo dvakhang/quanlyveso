@@ -5,7 +5,7 @@ block styles
 block modal
   modal(size="large", v-if='showAgentModal', @close='onAgentModalClose', :opened="showAgentModal", :header="false")
     div(slot='body')
-      v-addagent(:agent="agent")
+      v-addagent(:agent="agent", :edit-agent='editAgent')
   modal(size="large", v-if='showAddAgent', @close='onCloseAddAgent', :opened="showAddAgent", :header="false")
     div(slot='body')
       v-addagent(:agent='agent', :edit-agent='editAgent')

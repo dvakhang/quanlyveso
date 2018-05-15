@@ -1,7 +1,7 @@
 let vAddagent = (function () {
-    const SAVE_AGENT_API = '/api/saveAgent'
-    return {
-        template: `
+  const SAVE_AGENT_API = '/api/saveAgent'
+  return {
+    template: `
         <div class="card">
           <form id="agent" class="form-horizontal">
             <div class="card-content">
@@ -12,7 +12,7 @@ let vAddagent = (function () {
                     <div class="col-sm-8">
                       <div :class="['form-group', 'label-floating']">
                         <label class="control-label"></label>
-                        <input type="text" v-model="agent.code" name="code" :disabled="!editAgent" class="form-control" tabindex="1" />
+                        <input type="text" v-model="agent.code" name="code" :disabled="editAgent" class="form-control" tabindex="1" />
                       </div>
                     </div>
                   </div>
@@ -53,7 +53,7 @@ let vAddagent = (function () {
                         <div class="col-sm-8">
                         <div class="form-group label-floating">
                             <label class="control-label"></label>
-                            <input type="text" placeholder="Phone" v-model="agent.phone" name="phone" number="true" class="form-control" tabindex="4"/>
+                            <input type="text" placeholder="" v-model="agent.phone" name="phone" number="true" class="form-control" tabindex="4"/>
                         </div>
                         </div>
                   </div>
@@ -62,7 +62,7 @@ let vAddagent = (function () {
                     <div class="col-sm-8">
                       <div class="form-group label-floating">
                         <label class="control-label"></label>
-                        <input type="text" placeholder="Email" v-model="agent.email" name="email" class="form-control" tabindex="7"/>
+                        <input type="text" placeholder="" v-model="agent.email" name="email" class="form-control" tabindex="7"/>
                         <span class="help-block">{{errors.email.msg}}</span>
                       </div>
                     </div>
@@ -90,84 +90,91 @@ let vAddagent = (function () {
         </div>
       `,
 
-        props: {
-            agent: {
-                type: Object,
-                default: () => {
-                    return {
-                        code: '',
-                        name: '',
-                        address: '',
-                        email: '',
-                        phone: '',
-                        website: '',
-                        remark: '',
-                        represent: '',
-                        parrent: ''
-                    }
-                }
-            },
-            editAgent: false
-        },
+    props: {
+      agent: {
+        type: Object,
+        default: () => {
+          return {
+            code: '',
+            name: '',
+            address: '',
+            email: '',
+            phone: '',
+            website: '',
+            remark: '',
+            represent: '',
+            parrent: ''
+          }
+        }
+      },
+      editAgent: false
+    },
 
-        data() {
-            return {
-                errors: {
-                    code: { msg: '' },
-                    name: { msg: '' },
-                    website: { msg: '' },
-                    represent: { msg: '' },
-                    phone: { msg: '' },
-                    email: { msg: '' },
-                    address: { msg: '' },
-                }
-            }
-        },
+    data() {
+      return {
+        errors: {
+          code: { msg: '' },
+          name: { msg: '' },
+          website: { msg: '' },
+          represent: { msg: '' },
+          phone: { msg: '' },
+          email: { msg: '' },
+          address: { msg: '' },
+        }
+      }
+    },
 
-        computed: {
-            
-        },
+    computed: {
 
-        mounted() {
-            this.$form = $('#agent').validate({
-                errorPlacement: function (error, element) {
-                    $(element).parent('div').addClass('has-error')
-                    window.app.isFormValid = false
-                }
+    },
+
+    mounted() {
+      this.$form = $('#agent').validate({
+        errorPlacement: function (error, element) {
+          $(element).parent('div').addClass('has-error')
+          window.app.isFormValid = false
+        }
+      })
+
+    },
+
+
+    methods: {
+      metSaveAgent() {
+        confirmSave((done) => {
+          if (this.editAgent) {
+            this.agent.newAgent = false
+          } else {
+            this.agent.newAgent = true
+          }
+          axios.post(SAVE_AGENT_API, this.agent)
+            .then((response) => {
+              let c = response.data
+              if (c) {
+                this.agent._id = c._id
+                this.editAgent = true
+                successMsg(`Save was successfully!`)
+                done()
+              }
             })
+            .catch(function (error) {
+              let msg = error.message
+              if (error.response.status === 422) {
+                const { errors } = error.response.data
+                this.bindErrors(errors)
+                _.forIn(errors, (val, key) => {
+                  $(`#agent input[name=${key}]`).parent('div').addClass('has-error')
+                })
+              } else {
+                warningMsg(error.response.data.message)
+              }
+            }.bind(this))
+        })
+      },
 
-        },
-
-
-        methods: {
-
-            metSaveAgent() {
-                axios.post(SAVE_AGENT_API, this.agent)
-                    .then((response) => {
-                        let c = response.data
-                        if (c) {
-                            this.agent._id = c._id
-                            this.newAgent = false
-                            successMsg(`Save was successfully!`)
-                        }
-                    })
-                    .catch(function (error) {
-                        let msg = error.message
-                        if (error.response.status === 422) {
-                            const { errors } = error.response.data
-                            this.bindErrors(errors)
-                            _.forIn(errors, (val, key) => {
-                                $(`#agent input[name=${key}]`).parent('div').addClass('has-error')
-                            })
-                        } else {
-                            warningMsg(error.response.data.message)
-                        }
-                    }.bind(this))
-            },
-
-            bindErrors(errors) {
-                _.assign(this.errors, errors)
-            }
-        },
-    }
+      bindErrors(errors) {
+        _.assign(this.errors, errors)
+      }
+    },
+  }
 }())

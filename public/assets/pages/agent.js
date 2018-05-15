@@ -112,7 +112,8 @@ window.app = new Vue({
 
     metShowEditAgent() {
       this.editAgent = true
-      this.showAddAgent = true
+      this.showAgentModal = true
+      this.agent = this.selectedAgent
     },
 
     getAgent2(agent) {
@@ -140,16 +141,61 @@ window.app = new Vue({
     },
 
     metAddAgent() {
-      this.agent.parrent = '0'
-      this.showAgentModal = true
+      this.editAgent = false
+      this.showAddAgent = true
+      this.agent = {
+        code: '',
+        name: '',
+        address: '',
+        email: '',
+        phone: '',
+        website: '',
+        remark: '',
+        represent: '',
+        parrent: '0'
+      }
     },
 
     metDeleteAgent() {
-
+      confirmDelete((done) => {
+        let params = {
+          code: this.selectedAgent.code,
+        }
+        this.waiting = true
+        axios.delete('/api/deleteAgent', {
+          params: params
+        })
+          .then(() => {
+            this.waiting = false
+            this.getAgent1Domains()
+            done()
+          })
+          .catch((error) => {
+            this.waiting = false
+            errorMsg(error.message)
+          })
+      })
     },
 
     metDeleteAgent2() {
-
+      confirmDelete((done) => {
+        let params = {
+          code: this.selectedAgent2.code,
+        }
+        this.waiting = true
+        axios.delete('/api/deleteAgent', {
+          params: params
+        })
+          .then(() => {
+            this.waiting = false
+            this.getAgent1Domains()
+            done()
+          })
+          .catch((error) => {
+            this.waiting = false
+            errorMsg(error.message)
+          })
+      })
     },
 
     closeAgent2() {
@@ -169,31 +215,35 @@ window.app = new Vue({
     },
 
     metShowAgentModal(insert) {
-      this.showAgentModal = true
       if (!insert) {
+        this.showAgentModal = true
         this.agent = this.selectedAgent2
+        this.editAgent = true
       } else {
+        this.showAddAgent = true
+        this.editAgent = false
         this.agent = {
-          domain: this.selectedDomain.domain,
-          company: '',
-          website: '',
+          code: '',
           name: '',
-          phone: '',
-          phone2: '',
+          address: '',
           email: '',
-          email2: '',
+          phone: '',
+          website: '',
           remark: '',
-          price: ''
+          represent: '',
+          parrent: this.selectedAgent.code
         }
       }
     },
 
     onAgentModalClose() {
       this.showAgentModal = false
+      this.showAddAgent = false
       this.getAgent1Domains()
     },
 
     onCloseAddAgent() {
+      this.showAgentModal = false
       this.showAddAgent = false
       this.getAgent1Domains()
     }
