@@ -142,7 +142,6 @@ let vAddagent = (function () {
         methods: {
 
             metSaveAgent() {
-                this.agent.parrent = this.agentType
                 axios.post(SAVE_AGENT_API, this.agent)
                     .then((response) => {
                         let c = response.data

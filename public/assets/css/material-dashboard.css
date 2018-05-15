@@ -5753,7 +5753,7 @@ h2.title {
 .perfect-scrollbar-on .sidebar .sidebar-wrapper, .sidebar .sidebar-wrapper, .perfect-scrollbar-on
 .main-panel,
 .main-panel {
-  overflow: hidden;
+  overflow: auto;
 }
 
 .perfect-scrollbar-off .sidebar .sidebar-wrapper,
