@@ -11,6 +11,7 @@ const moment = require('moment')
 
 const User = require('../models/User')
 const Agent = require('../models/Agent')
+const Config = require('../models/Config')
 
 const {
   log
@@ -40,6 +41,25 @@ const createUsers = (roles) => {
     return User.create([admin])
   });
 };
+
+const createConfigs = () => {
+  return Config.count().then(count => {
+    if (count > 0)
+      return;
+
+    let configs = [{
+      name: 'BLOCK_DEFINE',
+      value: 1000,
+    }];
+
+    let promises = [];
+    _.forEach(configs, (c) => {
+      promises.push(Config.create(c));
+    });
+
+    return Promise.all(promises);
+  })
+}
 
 const createAgents = () => {
   return Agent.count().then(count => {
@@ -77,7 +97,8 @@ const seedData = async() => {
   log(`Seeding data...`, 3)
   return Promise.all([
     createUsers(),
-    createAgents()
+    createAgents(),
+    createConfigs()
   ]).then(async(data) => {
     const users = data[0]
     if (users) {

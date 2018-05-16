@@ -15,6 +15,7 @@ const authController = require('../controllers/AuthController')
 const userController = require('../controllers/UserController')
 const pageInfoController = require('../controllers/PageInfoController')
 const agentController = require('../controllers/AgentController')
+const settingController = require('../controllers/SettingController')
 
 router.get(SIGN_IN, authController.getSignIn)
 router.post(SIGN_IN, authController.postSignIn)
@@ -41,6 +42,7 @@ router.route('/api/updatePassword')
 router.get('/', homeController.getIndex)
 router.get('/users', userController.getUsersView)
 
+// Agent
 router.get('/agent', agentController.getIndex)
 router.route('/api/agents1')
   .post(agentController.getAgents)
@@ -53,6 +55,10 @@ router.delete('/api/deleteAgent' , [
   check('id').not().isEmpty().withMessage('Could not be blank')
 ], agentController.deleteAgent)  
 
-  
+//Config
+router.get('/setting', settingController.getIndex)
+router.route('/api/metSaveSetting')
+  .post(settingController.metSaveSetting)
+router.get('/api/getSetting', settingController.getSetting)
 
 module.exports = router

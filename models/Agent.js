@@ -15,6 +15,7 @@ const agentSchema = new mongoose.Schema({
   parrent: String,
   address: String,
   represent: String,
+  distribute: { type: Schema.ObjectId, ref: 'Distribute', childPath: 'agents' },
   activated: {
     type: String,
     default: true,

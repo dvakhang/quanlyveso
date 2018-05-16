@@ -1,0 +1,27 @@
+extends ../layout
+
+block styles
+
+block content
+  include ../partials/spinner
+  .container-fluid
+    .row
+        .col-md-12
+            .card
+                .card-header.card-header-icon(data-background-color='red')
+                    i.material-icons domain
+                .card-header
+                    h4.card-title Setting
+                .card-content
+                    .form-group
+                        label.control-label
+                            h5 
+                                b Số lượng 1 cây vé
+                        input#smtpHost.form-control(name='host', type='text', v-model='settingData.BLOCK_DEFINE', required='true', aria-required='true')
+                        span.material-input
+                    .row
+                        .col-md-12
+                            .btn-group
+                                button.btn.btn-success(type='button', @click='metSaveSetting') Save
+        
+            
