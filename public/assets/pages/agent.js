@@ -85,11 +85,11 @@ window.app = new Vue({
       this.me = me
     })
 
-    this.getAgent1Domains()
+    this.getAgent1()
   },
 
   methods: {
-    getAgent1Domains() {
+    getAgent1() {
       this.waiting = true
       axios.post('/api/agents1')
         .then((response) => {
@@ -120,7 +120,7 @@ window.app = new Vue({
       this.waiting = true
       this.allowEditAndDelete = false
       axios.post('/api/agents2', {
-        parrent: this.selectedAgent.code
+        id: this.selectedAgent._id
       }).then((response) => {
         this.waiting = false
         this.agents2 = response.data
@@ -159,7 +159,7 @@ window.app = new Vue({
     metDeleteAgent() {
       confirmDelete((done) => {
         let params = {
-          code: this.selectedAgent.code,
+          id: this.selectedAgent._id,
         }
         this.waiting = true
         axios.delete('/api/deleteAgent', {
@@ -167,7 +167,7 @@ window.app = new Vue({
         })
           .then(() => {
             this.waiting = false
-            this.getAgent1Domains()
+            this.getAgent1()
             done()
           })
           .catch((error) => {
@@ -188,7 +188,7 @@ window.app = new Vue({
         })
           .then(() => {
             this.waiting = false
-            this.getAgent1Domains()
+            this.getAgent1()
             done()
           })
           .catch((error) => {
@@ -231,7 +231,7 @@ window.app = new Vue({
           website: '',
           remark: '',
           represent: '',
-          parrent: this.selectedAgent.code
+          parrent: this.selectedAgent._id
         }
       }
     },
@@ -239,13 +239,13 @@ window.app = new Vue({
     onAgentModalClose() {
       this.showAgentModal = false
       this.showAddAgent = false
-      this.getAgent1Domains()
+      this.getAgent1()
     },
 
     onCloseAddAgent() {
       this.showAgentModal = false
       this.showAddAgent = false
-      this.getAgent1Domains()
+      this.getAgent1()
     }
   }
 });

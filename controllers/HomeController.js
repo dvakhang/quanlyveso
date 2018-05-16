@@ -12,10 +12,8 @@ const getIndex = (req, res) => {
   const model = {}
   console.log('user ', req.user)
   if(req.user){
-    console.log('uerrrrrrrrrrrrrrrr')
     return res.redirect('/agent')
   }else{
-    console.log('singiiiiiiiiiiiiiiii')
     return res.redirect('/signin')
   }
   // switch (req.user.role) {

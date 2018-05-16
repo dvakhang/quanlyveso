@@ -23,13 +23,13 @@ const createUsers = (roles) => {
     }
 
     const admin = new User({
-      email: 'admin@fibo.vn',
+      email: 'khang.dong@dounets.com',
       username: 'admin',
-      password: '123789',
+      password: '1',
       profile: {
         name: 'Administrator',
         gender: 'Male',
-        phone: '+84901861929',
+        phone: '+84979587892',
       },
       deleteFlag: false,
       activeFlag: true,
@@ -67,17 +67,6 @@ const createAgents = () => {
       address: 'Bến Tre',
       phone: '',
       parrent: '0',
-      activated: 'true'
-    },
-    {
-      code: 'KHAITP',
-      website: '',
-      email: '',
-      remark: '',
-      name: 'Lê Quang Khải',
-      address: 'Bến Tre',
-      phone: '',
-      parrent: 'TRANTP',
       activated: 'true'
     }];
     return Promise.all(agents.map(c => Agent.create(c)))

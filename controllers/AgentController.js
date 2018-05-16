@@ -11,7 +11,6 @@ const getIndex = async (req, res) => {
   const model = {
     title: "Quản lý đại lý"
   }
-
   res.render('agent/index')
 }
 
@@ -33,8 +32,8 @@ const getAgents = async (req, res, next) => {
 
 const getAgents2 = async (req, res, next) => {
   try {
-    const parrent = req.body.parrent
-    const agents = await AgentService.getAgents2(parrent).then((d) => {
+    const id = req.body.id
+    const agents = await AgentService.getAgents2(id).then((d) => {
       return d.map(u => {
         u.website = u.website || ""
         return u
@@ -70,9 +69,9 @@ const saveAgent = async (req, res) => {
 }
 
 const deleteAgent = async (req, res) => {
-  const { code } = matchedData(req)
+  const { id } = matchedData(req)
   try {
-    const d = await AgentService.deleteAgent(code)
+    const d = await AgentService.deleteAgent(id)
     res.status(200).json(d)
   } catch (error) {
     res.status(500).json({ message: `Could not delete agent: ${error.message}` })

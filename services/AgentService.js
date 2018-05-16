@@ -10,10 +10,10 @@ const getAgents = () => {
   })
 }
 
-const getAgents2 = (parrent) => {
+const getAgents2 = (id) => {
 
   return Agent.find({
-    parrent: parrent
+    parrent: id
   })
 }
 
@@ -30,9 +30,10 @@ const saveAgent = (agent) => {
     })
 }
 
-const deleteAgent = async (code) => {
-  await Agent.deleteMany({ parrent: code })
-  return await Agent.findOneAndRemove({ code: code })
+const deleteAgent = async (id) => {
+  console.log(id)
+  await Agent.deleteMany({ parrent: id})
+  return await Agent.findOneAndRemove({ _id: ObjectId(id) })
 }
 
 module.exports = {
