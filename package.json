@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js",
+    "dev": "nodemon --inspect app.js",
     "test": "export NODE_ENV=test && mocha --reporter spec",
     "test:unit": "echo 'Ignore testing...'",
     "up-version": "npm version patch"

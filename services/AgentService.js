@@ -27,10 +27,9 @@ const saveAgent = async (agent) => {
   if (agent.parrent === '0') {
     agent.parrent = ObjectId('000000000000000000000000')
   } else {
-    agent.parrent = ObjectId(agent.parrent)
-    await Agent.findOneAndUpdate({ _id: agent.parrent }, { $set: { agent: agent.agent._id } }, { upsert: true })
+    await Agent.findOneAndUpdate({ _id: ObjectId(agent.parrent) }, { $set: { agent: agent._id } }, { upsert: true })
   }
-  console.log('_id: ', ObjectId(agent.parrent))
+  console.log('_id: ', ObjectId(agent._id))
 
   return Agent.findOneAndUpdate({ _id: agent._id }, { $set: agent }, { upsert: true })
     .then(() => {
