@@ -24,36 +24,11 @@
                 a(href='/settings')
                   span.sidebar-normal Settings
     ul.nav
-      li(class=activePage=="dashboard" ? "active" : "")
-        a(href='#dashboard', data-toggle="collapse")
-          i.material-icons dashboard
-          p
-            | Sales
-            b.caret
-        #dashboard.collapse
-          ul.nav
-            li(class=subActivePage=="distributed-domains" ? "active" : "")
-              a(href="/dashboard/distributed-domains")
-                span.sidebar-normal Distributed Domains
-            li(class=subActivePage=="preorder-domains" ? "active" : "")
-              a(href="/dashboard/preorder-domains")
-                span.sidebar-normal PreOrder Domains
-            li(class=subActivePage=="succeed-domains" ? "active" : "")
-              a(href="/dashboard/succeed-domains")
-                span.sidebar-normal Sold Domains
-            li(class=subActivePage=="invested-domains" ? "active" : "")
-              a(href="/dashboard/invested-domains")
-                span.sidebar-normal Invested Domains
-      //- each screen in screens
-      //-   li(class=activePage==screen.name ? "active" : "")
-      //-     a(href=screen.route)
-      //-       i.material-icons #{screen.icon}
-      //-       p #{screen.title}
       li(class=activePage=='agent' ? "active" : "")
         a(href='/agent')
-          i.material-icons dashboard
-          p Quản lý đại lý
+          i.material-icons device_hub
+          p Đại lý
       li(class=activePage=='setting' ? "active" : "")
         a(href='/setting')
-          i.material-icons dashboard
+          i.material-icons settings
           p Setting

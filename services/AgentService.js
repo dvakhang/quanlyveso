@@ -6,7 +6,7 @@ const Agent = require('../models/Agent')
 
 const getAgents = () => {
   return Agent.find({
-    parrent: '0'
+    parrent: ObjectId('000000000000000000000000')
   })
 }
 
@@ -14,7 +14,7 @@ const getAgents2 = (id) => {
 
   return Agent.find({
     parrent: id
-  })
+  }).populate('parrent')
 }
 
 const findOneAgent = async (a) => {
@@ -22,8 +22,16 @@ const findOneAgent = async (a) => {
   return d;
 }
 
-const saveAgent = (agent) => {
+const saveAgent = async (agent) => {
   agent._id = agent._id || new ObjectId()
+  if (agent.parrent === '0') {
+    agent.parrent = ObjectId('000000000000000000000000')
+  } else {
+    agent.parrent = ObjectId(agent.parrent)
+    await Agent.findOneAndUpdate({ _id: agent.parrent }, { $set: { agent: agent.agent._id } }, { upsert: true })
+  }
+  console.log('_id: ', ObjectId(agent.parrent))
+
   return Agent.findOneAndUpdate({ _id: agent._id }, { $set: agent }, { upsert: true })
     .then(() => {
       return agent
@@ -32,7 +40,7 @@ const saveAgent = (agent) => {
 
 const deleteAgent = async (id) => {
   console.log(id)
-  await Agent.deleteMany({ parrent: id})
+  await Agent.deleteMany({ parrent: ObjectId(id) })
   return await Agent.findOneAndRemove({ _id: ObjectId(id) })
 }
 

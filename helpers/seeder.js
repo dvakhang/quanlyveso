@@ -8,6 +8,8 @@
 const _ = require('lodash')
 const faker = require('faker')
 const moment = require('moment')
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId
 
 const User = require('../models/User')
 const Agent = require('../models/Agent')
@@ -75,7 +77,7 @@ const createAgents = () => {
       name: 'Lý Uyển Trân',
       address: 'Bến Tre',
       phone: '',
-      parrent: '0',
+      parrent: ObjectId('000000000000000000000000'),
       activated: 'true'
     },
     {
@@ -86,7 +88,7 @@ const createAgents = () => {
       name: 'Nguyễn Chí Trung',
       address: 'Bến Tre',
       phone: '',
-      parrent: '0',
+      parrent: ObjectId('000000000000000000000000'),
       activated: 'true'
     }];
     return Promise.all(agents.map(c => Agent.create(c)))

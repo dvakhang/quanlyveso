@@ -12,10 +12,10 @@ const agentSchema = new mongoose.Schema({
   remark: String,
   name: String,
   phone: String,
-  parrent: String,
+  parrent: { type: Schema.ObjectId, ref: 'Agent', childPath: 'agents' },
   address: String,
+  agent: [{ type: Schema.ObjectId, ref: 'Agent', childPath: 'agents' }],
   represent: String,
-  distribute: { type: Schema.ObjectId, ref: 'Distribute', childPath: 'agents' },
   activated: {
     type: String,
     default: true,

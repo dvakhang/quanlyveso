@@ -9,7 +9,7 @@ const { matchedData } = require('express-validator/filter')
  */
 const getIndex = async (req, res) => {
   const model = {
-    title: "Quản lý đại lý"
+    title: "Đại lý"
   }
   res.render('agent/index')
 }
