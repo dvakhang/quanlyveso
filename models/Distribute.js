@@ -9,7 +9,7 @@ const distributeSchema = new mongoose.Schema({
   block: Number,
   quantity: Number,
   type: String,
-  agent: { type: Schema.ObjectId, ref: 'Agent', childPath: 'distributes' },
+  agent: { type: Schema.ObjectId, ref: 'Agent' }
 }, {
   timestamps: true
 });

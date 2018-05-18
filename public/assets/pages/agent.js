@@ -22,30 +22,30 @@ window.app = new Vue({
       allowEditAndDeleteDomain: false,
       allowEditAndDelete: false,
       basicColumns: [{
-        data: 'code',
-        title: 'Mã Đại Lý',
-        orderable: false,
-      },
-      {
-        data: 'name',
-        title: 'Tên Đại Lý',
-        orderable: false,
-      },
-      {
-        data: 'address',
-        title: 'Địa chỉ',
-        orderable: false,
-      },
-      {
-        data: 'phone',
-        title: 'SĐT',
-        orderable: false,
-      },
-      {
-        data: 'remark',
-        title: 'Ghi chú',
-        orderable: false,
-      }
+          data: 'code',
+          title: 'Mã Đại Lý',
+          orderable: false,
+        },
+        {
+          data: 'name',
+          title: 'Tên Đại Lý',
+          orderable: false,
+        },
+        {
+          data: 'address',
+          title: 'Địa chỉ',
+          orderable: false,
+        },
+        {
+          data: 'phone',
+          title: 'SĐT',
+          orderable: false,
+        },
+        {
+          data: 'remark',
+          title: 'Ghi chú',
+          orderable: false,
+        }
       ],
       me: {},
       selectedAgent: {},
@@ -95,7 +95,7 @@ window.app = new Vue({
         .then((response) => {
           this.waiting = false
           this.agents1 = response.data
-          initDatatable(this.options, this.onRowClick, '#datatables')
+          initDatatable(this.options, this.onRowClick)
         })
     },
 
@@ -163,8 +163,8 @@ window.app = new Vue({
         }
         this.waiting = true
         axios.delete('/api/deleteAgent', {
-          params: params
-        })
+            params: params
+          })
           .then(() => {
             this.waiting = false
             this.getAgent1()
@@ -180,12 +180,12 @@ window.app = new Vue({
     metDeleteAgent2() {
       confirmDelete((done) => {
         let params = {
-          code: this.selectedAgent2.code,
+          id: this.selectedAgent2._id,
         }
         this.waiting = true
         axios.delete('/api/deleteAgent', {
-          params: params
-        })
+            params: params
+          })
           .then(() => {
             this.waiting = false
             this.getAgent1()

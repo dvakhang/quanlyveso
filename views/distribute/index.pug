@@ -22,7 +22,7 @@ block content
                         .col-md-4
                             label.col-sm-3(style="padding: 16px 5px 0 0") Loại Đại lý
                             .col-sm-9(style="margin: -15px 0px 0px 0px")
-                                select.form-control(v-model="distribute.agent")
+                                select.form-control(v-model="distribute.agent", :disabled='allowEditAndDeleteDistribute')
                                     option(v-for="r in agents", :value="r._id") {{r.name}}
                         .col-md-4
                             label.col-sm-3(style="padding: 16px 5px 0 0") Số cây
@@ -30,6 +30,7 @@ block content
                                 input.form-control(v-model='distribute.block')
                     .col-md-12.text-right
                         .btn-group
+                            button.btn.btn-success(type='button', @click='metNewDistribute') New
                             button.btn.btn-success(type='button', @click='metSaveDistribute') Save
                 .card-content
                     .col-md-12

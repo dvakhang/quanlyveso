@@ -100,7 +100,7 @@ window.app = new Vue({
         .then((response) => {
           this.waiting = false
           this.users = response.data
-          initDatatable(this.options, this.onRowClick, '#datatables')
+          initDatatable(this.options, this.onRowClick)
         })
     },
 
