@@ -8,10 +8,14 @@ const { matchedData } = require('express-validator/filter')
  * @param {*} res 
  */
 const getIndex = async (req, res) => {
-  const model = {
-    title: "Đại lý"
+  if (req.user) {
+    const model = {
+      title: "Đại lý"
+    }
+    res.render('agent/index')
+  } else {
+      res.redirect('/signin')
   }
-  res.render('agent/index')
 }
 
 const getAgents = async (req, res, next) => {
@@ -34,6 +38,22 @@ const getAgents2 = async (req, res, next) => {
   try {
     const id = req.body.id
     const agents = await AgentService.getAgents2(id).then((d) => {
+      return d.map(u => {
+        u.website = u.website || ""
+        return u
+      })
+    })
+
+    res.status(200).json(agents)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getAgentsCombo = async (req, res, next) => {
+  try {
+    const data = []
+    const agents = await AgentService.getAgentsCombo().then((d) => {
       return d.map(u => {
         u.website = u.website || ""
         return u
@@ -82,6 +102,7 @@ module.exports = {
   getIndex,
   getAgents,
   getAgents2,
+  getAgentsCombo,
   saveAgent,
   deleteAgent
 }

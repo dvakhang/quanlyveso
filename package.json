@@ -3,8 +3,8 @@
   "version": "2.2.97",
   "description": "The tool for downloading and importing domain.",
   "main": "app.js",
-  "repository": "git@github.com:lucduong/fibo-domain.git",
-  "author": "Luc <luc@ltv.vn>",
+  "repository": "",
+  "author": "Khang.Dong <dvakhang34@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "node app.js",

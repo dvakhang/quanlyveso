@@ -3,11 +3,17 @@ const _ = require('lodash')
 const ObjectId = mongoose.Types.ObjectId
 
 const Agent = require('../models/Agent')
+const Distribute = require('../models/Distribute')
 
 const getAgents = () => {
   return Agent.find({
     parrent: ObjectId('000000000000000000000000')
   })
+}
+
+const getAgentsCombo = () => {
+  return Agent.find({
+  }).select('_id name')
 }
 
 const getAgents2 = (id) => {
@@ -40,11 +46,13 @@ const saveAgent = async (agent) => {
 const deleteAgent = async (id) => {
   console.log(id)
   await Agent.deleteMany({ parrent: ObjectId(id) })
+  await Distribute.deleteMany({ agent: ObjectId(id) })
   return await Agent.findOneAndRemove({ _id: ObjectId(id) })
 }
 
 module.exports = {
   getAgents,
+  getAgentsCombo,
   getAgents2,
   findOneAgent,
   saveAgent,

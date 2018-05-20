@@ -12,21 +12,10 @@ const getIndex = (req, res) => {
   const model = {}
   console.log('user ', req.user)
   if(req.user){
-    return res.redirect('/agent')
+    return res.redirect(req.session.returnTo || '/agent')
   }else{
     return res.redirect('/signin')
   }
-  // switch (req.user.role) {
-  //   case 'SALE':
-  //     break
-  //   case 'MANAGER':
-  //   case 'ADMIN':
-  //     return res.redirect('/users')
-  //     break
-  //   default:
-  //     return res.render('home/index', model)
-  //     break
-  // }
 }
 
 module.exports = {

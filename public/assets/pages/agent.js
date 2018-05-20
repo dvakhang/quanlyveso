@@ -204,7 +204,15 @@ window.app = new Vue({
     },
 
     saveRemark() {
-
+      this.waiting = true
+      this.selectedAgent.newAgent = false
+      axios.post('/api/saveAgent', 
+        this.selectedAgent
+      ).then((response) => {
+          this.waiting = false
+          this.getAgent1()
+        })
+      
     },
 
     onAgent2Select(agent) {

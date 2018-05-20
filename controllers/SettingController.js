@@ -1,10 +1,14 @@
 const SettingService = require('../services/SettingService')
 
 const getIndex = async (req, res) => {
+  if (req.user) {
     const model = {
-        title: "Setting"
-    }
-    res.render('setting/index')
+      title: "Setting"
+  }
+  res.render('setting/index')
+  } else {
+      res.redirect('/signin')
+  }
 }
 
 const metSaveSetting = async(req, res) => {
@@ -42,5 +46,7 @@ const getSetting = async(req, res) => {
     }
   }
 module.exports = {
-    getIndex, metSaveSetting, getSetting
+    getIndex, 
+    metSaveSetting, 
+    getSetting
 }

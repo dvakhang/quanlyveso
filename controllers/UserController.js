@@ -7,12 +7,15 @@ const UserService = require('../services/UserService')
 const User = require('../models/User')
 
 const getUsersView = (req, res) => {
-  console.log('getUsersView')
-  const model = {
-    title: "User List"
+  if (req.user) {
+    const model = {
+      title: "User List"
+    }
+    res.render('users/index')
+  } else {
+      res.redirect('/signin')
   }
-
-  res.render('users/index')
+  
 }
 
 const getMoveDomainsUserView = async(req, res) => {

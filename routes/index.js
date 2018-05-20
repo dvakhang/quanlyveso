@@ -49,6 +49,8 @@ router.route('/api/agents1')
   .post(agentController.getAgents)
 router.route('/api/agents2')
   .post(agentController.getAgents2)
+router.route('/api/getAgentsCombo')
+  .post(agentController.getAgentsCombo)  
 
 router.route('/api/saveAgent')
   .post(agentController.saveAgent)
@@ -68,5 +70,7 @@ router.route('/api/getDistribute')
   .post(distributeController.getDistribute)
 router.route('/api/saveDistribute')
   .post(distributeController.saveDistribute)
+router.delete('/api/deleteDistribute',[check('id').not().isEmpty().withMessage('Could not be blank')],
+ distributeController.deleteDistribute)
 
 module.exports = router

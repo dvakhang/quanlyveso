@@ -14,28 +14,35 @@ window.app = new Vue({
       agent: '',
       waiting: false,
       basicColumns: [{
-          data: 'agent',
-          title: 'Tên đại lý',
-          orderable: false,
-          render(data) {
-            if (data) {
-              return data.name
-            }
+        data: 'agent',
+        title: 'Tên đại lý',
+        orderable: false,
+        render(data) {
+          if (data) {
+            return data.name
           }
-        },
-        {
-          data: 'block',
-          title: 'Số cây',
-          orderable: false,
-        },
-        {
-          data: 'quantity',
-          title: 'Số lượng vé',
-          orderable: false,
-        },
+        }
+      },
       ],
+      distributeColumn: {
+        data: 'block',
+        title: 'Số cây',
+        orderable: false,
+      },
+      quanlityColumn: {
+        data: 'quantity',
+        title: 'Số lượng vé',
+        orderable: false
+      },
+      createDateColumn: {
+        data: 'createdDt',
+        title: 'Ngày tạo',
+        orderable: false,
+        sortable: true,
+      },
       distributes: [],
-      allowEditAndDeleteDistribute: false
+      allowEditAndDeleteDistribute: false,
+      distributeType: true
 
     }
   },
@@ -46,11 +53,24 @@ window.app = new Vue({
   },
 
   computed: {
+    columns() {
+      if (this.distributeType) {
+        return this.basicColumns.concat([this.createDateColumn]).concat([this.distributeColumn]).concat([this.quanlityColumn])
+      } else {
+        return this.basicColumns.concat([this.createDateColumn]).concat([this.quanlityColumn])
+      }
+    },
+
     options() {
       let opts = {
         iDisplayLength: 100,
-        columns: this.basicColumns,
+        columns: this.columns,
         data: this.distributes,
+        columnDefs: [{
+          orderable: false, 
+          targets: [ 0 ] ,
+          sortable: false,
+        }]
       }
       return opts
     },
@@ -59,7 +79,7 @@ window.app = new Vue({
   methods: {
     getAgentCombo() {
       this.waiting = true
-      axios.post('/api/agents1')
+      axios.post('/api/getAgentsCombo')
         .then((response) => {
           this.waiting = false
           this.agents = response.data
@@ -69,8 +89,8 @@ window.app = new Vue({
     getDistribute() {
       this.waiting = true
       axios.post('/api/getDistribute', {
-          type: this.distribute.type
-        })
+        type: this.distribute.type
+      })
         .then((response) => {
           this.waiting = false
           this.distributes = response.data
@@ -89,8 +109,8 @@ window.app = new Vue({
     metSaveDistribute() {
       this.waiting = true
       axios.post('/api/saveDistribute', {
-          distribute: this.distribute
-        })
+        distribute: this.distribute
+      })
         .then((response) => {
           this.waiting = false
           this.getDistribute()
@@ -98,6 +118,11 @@ window.app = new Vue({
     },
 
     metChangeType() {
+      if (this.distribute.type == 'PP') {
+        this.distributeType = true
+      } else {
+        this.distributeType = false
+      }
       this.getDistribute()
     },
 
@@ -105,11 +130,32 @@ window.app = new Vue({
       this.allowEditAndDeleteDistribute = false
       this.distribute = {
         _id: '',
-        type: 'PP',
+        type: this.distribute.type,
         block: 0,
         agent: '',
         quantity: 0
       }
     },
+
+    metDeleteDistribute(){
+      confirmDelete((done) => {
+        let params = {
+          id: this.distribute._id,
+        }
+        this.waiting = true
+        axios.delete('/api/deleteDistribute', {
+            params: params
+          })
+          .then(() => {
+            this.waiting = false
+            this.getDistribute()
+            done()
+          })
+          .catch((error) => {
+            this.waiting = false
+            errorMsg(error.message)
+          })
+      })
+    }
   }
 })

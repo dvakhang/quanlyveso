@@ -1,8 +1,7 @@
 /**
- * Copyright © 2017 LTV Co., Ltd. All Rights Reserved.
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
- * Written by luc <luc@ltv.vn> on Jul 25, 2017
+ * Written by Khang.Dong <dvakhang34@gmail.com> on May 01, 2018
  */
 
 const express = require('express')
@@ -166,15 +165,6 @@ app.use('/', (req, res, next) => {
       res.locals.activePage = segments[1]
     } else {
       res.locals.activePage = ""
-    }
-    if (segments.length > 2) {
-      res.locals.subActivePage = segments[2]
-      segments.shift()
-      let idxDelete = segments.indexOf("moveDomains")
-      if (idxDelete >= 0) {
-        segments.splice(idxDelete - 1, 1)
-      }
-      res.locals.js_path = segments.join("/")
     }
   }
   next()
