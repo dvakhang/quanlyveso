@@ -77,7 +77,9 @@ const createAgents = () => {
       address: 'Bến Tre',
       phone: '',
       parrent: ObjectId('000000000000000000000000'),
-      activated: 'true'
+      activated: 'true',
+      represent: 'Lý Uyển Trân',
+      createdDt: '2018-05-01 19:12'
     },
     {
       code: 'TRUNGTP',
@@ -88,7 +90,9 @@ const createAgents = () => {
       address: 'Bến Tre',
       phone: '',
       parrent: ObjectId('000000000000000000000000'),
-      activated: 'true'
+      activated: 'true',
+      represent: 'Nguyễn Chí Trung',
+      createdDt: '2018-05-01 19:12'
     }];
     return Promise.all(agents.map(c => Agent.create(c)))
   });

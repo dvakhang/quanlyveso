@@ -8,21 +8,48 @@ window.app = new Vue({
         type: 'PP',
         block: 0,
         agent: '',
-        quantity: 0
+        quantity: 0,
+        place: ''
       },
       agents: [],
       agent: '',
       waiting: false,
       basicColumns: [{
-        data: 'agent',
-        title: 'Tên đại lý',
-        orderable: false,
-        render(data) {
-          if (data) {
-            return data.name
+          data: 'agent',
+          title: 'Tên đại lý',
+          orderable: false,
+          render(data) {
+            if (data) {
+              return data.name
+            }
+          }
+        },
+        {
+          data: 'createdDt',
+          title: 'Ngày tạo',
+          orderable: false,
+          sortable: true,
+        },
+        {
+          data: 'agent',
+          title: 'Người đại diện',
+          orderable: false,
+          render(data) {
+            if (data) {
+              return data.represent
+            }
+          }
+        },
+        {
+          data: 'agent',
+          title: 'Số điện thoại',
+          orderable: false,
+          render(data) {
+            if (data) {
+              return data.phone
+            }
           }
         }
-      },
       ],
       distributeColumn: {
         data: 'block',
@@ -34,11 +61,10 @@ window.app = new Vue({
         title: 'Số lượng vé',
         orderable: false
       },
-      createDateColumn: {
-        data: 'createdDt',
-        title: 'Ngày tạo',
-        orderable: false,
-        sortable: true,
+      placeColumn: {
+        data: 'place',
+        title: 'Điểm trả vé',
+        orderable: false
       },
       distributes: [],
       allowEditAndDeleteDistribute: false,
@@ -55,9 +81,9 @@ window.app = new Vue({
   computed: {
     columns() {
       if (this.distributeType) {
-        return this.basicColumns.concat([this.createDateColumn]).concat([this.distributeColumn]).concat([this.quanlityColumn])
+        return this.basicColumns.concat([this.distributeColumn]).concat([this.quanlityColumn])
       } else {
-        return this.basicColumns.concat([this.createDateColumn]).concat([this.quanlityColumn])
+        return this.basicColumns.concat([this.quanlityColumn]).concat([this.placeColumn])
       }
     },
 
@@ -67,8 +93,8 @@ window.app = new Vue({
         columns: this.columns,
         data: this.distributes,
         columnDefs: [{
-          orderable: false, 
-          targets: [ 0 ] ,
+          orderable: false,
+          targets: [0],
           sortable: false,
         }]
       }
@@ -79,7 +105,13 @@ window.app = new Vue({
   methods: {
     getAgentCombo() {
       this.waiting = true
-      axios.post('/api/getAgentsCombo')
+      let URL = ''
+      if (this.distribute.type == 'PP') {
+        URL = '/api/agents1'
+      } else {
+        URL = '/api/getAgents2Combo'
+      }
+      axios.post(URL)
         .then((response) => {
           this.waiting = false
           this.agents = response.data
@@ -89,8 +121,8 @@ window.app = new Vue({
     getDistribute() {
       this.waiting = true
       axios.post('/api/getDistribute', {
-        type: this.distribute.type
-      })
+          type: this.distribute.type
+        })
         .then((response) => {
           this.waiting = false
           this.distributes = response.data
@@ -109,8 +141,8 @@ window.app = new Vue({
     metSaveDistribute() {
       this.waiting = true
       axios.post('/api/saveDistribute', {
-        distribute: this.distribute
-      })
+          distribute: this.distribute
+        })
         .then((response) => {
           this.waiting = false
           this.getDistribute()
@@ -123,6 +155,7 @@ window.app = new Vue({
       } else {
         this.distributeType = false
       }
+      this.getAgentCombo()
       this.getDistribute()
     },
 
@@ -137,7 +170,7 @@ window.app = new Vue({
       }
     },
 
-    metDeleteDistribute(){
+    metDeleteDistribute() {
       confirmDelete((done) => {
         let params = {
           id: this.distribute._id,

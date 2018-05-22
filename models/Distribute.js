@@ -9,6 +9,7 @@ const distributeSchema = new mongoose.Schema({
   block: Number,
   quantity: Number,
   type: String,
+  place: String,
   agent: { type: Schema.ObjectId, ref: 'Agent' },
   createdDt: String
 }, {

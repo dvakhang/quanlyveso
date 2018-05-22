@@ -11,9 +11,13 @@ const _ = require('lodash')
 const getIndex = (req, res) => {
   const model = {}
   console.log('user ', req.user)
-  if(req.user){
-    return res.redirect(req.session.returnTo || '/agent')
-  }else{
+  if (req.user) {
+    if (req.session.returnTo !== '/') {
+      return res.redirect(req.session.returnTo)
+    } else {
+      return res.redirect('/agent')
+    }
+  } else {
     return res.redirect('/signin')
   }
 }

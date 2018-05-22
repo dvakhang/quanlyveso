@@ -4,6 +4,7 @@ const ObjectId = mongoose.Types.ObjectId
 
 const Agent = require('../models/Agent')
 const Distribute = require('../models/Distribute')
+const moment = require('moment')
 
 const getAgents = () => {
   return Agent.find({
@@ -11,8 +12,9 @@ const getAgents = () => {
   })
 }
 
-const getAgentsCombo = () => {
+const getAgents2Combo = () => {
   return Agent.find({
+    parrent: { $ne: ObjectId('000000000000000000000000') }
   }).select('_id name')
 }
 
@@ -29,11 +31,15 @@ const findOneAgent = async (a) => {
 }
 
 const saveAgent = async (agent) => {
+  if(!agent._id){
+    const today = moment().format('YYYY-MM-DD HH:mm:ss')
+    agent.createdDt = today
+  }
   agent._id = agent._id || new ObjectId()
   if (agent.parrent === '0') {
     agent.parrent = ObjectId('000000000000000000000000')
   } else {
-    await Agent.findOneAndUpdate({ _id: ObjectId(agent.parrent) }, { $set: { agent: agent._id } }, { upsert: true })
+    await Agent.findOneAndUpdate({ _id: ObjectId(agent._id) }, { $set: { agent: agent } }, { upsert: true })
   }
   console.log('_id: ', ObjectId(agent._id))
 
@@ -52,7 +58,7 @@ const deleteAgent = async (id) => {
 
 module.exports = {
   getAgents,
-  getAgentsCombo,
+  getAgents2Combo,
   getAgents2,
   findOneAgent,
   saveAgent,

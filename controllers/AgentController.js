@@ -50,14 +50,11 @@ const getAgents2 = async (req, res, next) => {
   }
 }
 
-const getAgentsCombo = async (req, res, next) => {
+const getAgents2Combo = async (req, res, next) => {
   try {
     const data = []
-    const agents = await AgentService.getAgentsCombo().then((d) => {
-      return d.map(u => {
-        u.website = u.website || ""
-        return u
-      })
+    const agents = await AgentService.getAgents2Combo().then((d) => {
+      return d
     })
 
     res.status(200).json(agents)
@@ -102,7 +99,7 @@ module.exports = {
   getIndex,
   getAgents,
   getAgents2,
-  getAgentsCombo,
+  getAgents2Combo,
   saveAgent,
   deleteAgent
 }

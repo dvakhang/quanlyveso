@@ -27,16 +27,26 @@ block content
                         .col-md-4(v-if='distributeType')
                             label.col-sm-3(style="padding: 16px 5px 0 0") Số cây
                             .col-sm-9(style="margin: -15px 0px 0px 0px")
-                                input.form-control(v-model='distribute.block')
+                                input.form-control(type="number" v-model='distribute.block')
                         .col-md-4(v-if='!distributeType')
                             label.col-sm-3(style="padding: 16px 5px 0 0") Số tờ
                             .col-sm-9(style="margin: -15px 0px 0px 0px")
-                                input.form-control(v-model='distribute.quantity')
-                    .col-md-12.text-right
-                        .btn-group
-                            button.btn.btn-success(type='button', @click='metNewDistribute') New
-                            button.btn.btn-success(type='button', @click='metSaveDistribute') Save
-                            button.btn.btn-danger(type='button', @click='metDeleteDistribute') Delete
+                                input.form-control(type="number" v-model='distribute.quantity')
+                    .row
+                        .col-md-4(v-if='!distributeType')
+                            label.col-sm-3(style="padding: 16px 5px 0 0") Điểm trả vé
+                            .col-sm-9.form-group(style="margin: 5px 0px 0px 0px")
+                                input.form-control.is-empty(v-model='distribute.place')
+                        .col-md-8.text-right(v-if='!distributeType')
+                            .btn-group
+                                button.btn.btn-success(type='button', @click='metNewDistribute') New
+                                button.btn.btn-success(type='button', @click='metSaveDistribute') Save
+                                button.btn.btn-danger(type='button', @click='metDeleteDistribute') Delete
+                        .col-md-12.text-right(v-if='distributeType')
+                            .btn-group
+                                button.btn.btn-success(type='button', @click='metNewDistribute') New
+                                button.btn.btn-success(type='button', @click='metSaveDistribute') Save
+                                button.btn.btn-danger(type='button', @click='metDeleteDistribute') Delete
                     .col-md-12
                         .table-responsive
                             table#datatables.table.table-striped.table-hover

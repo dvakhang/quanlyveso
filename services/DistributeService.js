@@ -10,7 +10,7 @@ const getDistribute = (type) => {
   return Distribute.find({
     type: type
   }).populate('agent')
-    .select("_id type block quantity agent createdDt")
+    .select("_id type block quantity agent createdDt place")
     .sort({createdAt: -1})
 }
 

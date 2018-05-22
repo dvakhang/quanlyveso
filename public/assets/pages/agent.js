@@ -27,6 +27,11 @@ window.app = new Vue({
           orderable: false,
         },
         {
+          data: 'createdDt',
+          title: 'Ngày tạo',
+          orderable: false,
+        },
+        {
           data: 'name',
           title: 'Tên Đại Lý',
           orderable: false,
