@@ -52,8 +52,9 @@ router.route('/api/agents2')
 router.route('/api/getAgents2Combo')
   .post(agentController.getAgents2Combo)  
 
-router.route('/api/saveAgent')
-  .post(agentController.saveAgent)
+router.post('/api/saveAgent',[
+  check('code').not().isEmpty().withMessage('Could not be blank')]
+  ,agentController.saveAgent)
 router.delete('/api/deleteAgent' , [
   check('id').not().isEmpty().withMessage('Could not be blank')
 ], agentController.deleteAgent)  

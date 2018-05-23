@@ -64,7 +64,14 @@ window.app = new Vue({
       placeColumn: {
         data: 'place',
         title: 'Điểm trả vé',
-        orderable: false
+        orderable: false,
+        render(data) {
+          if (data) {
+            return data
+          }else{
+            return ""
+          }
+        }
       },
       distributes: [],
       allowEditAndDeleteDistribute: false,
@@ -146,6 +153,19 @@ window.app = new Vue({
         .then((response) => {
           this.waiting = false
           this.getDistribute()
+        }).catch((err) => {
+          this.waiting = false
+          let mess = ''
+          if (err.response.data.code = 'validate') {
+            let errda = err.response.data.validation
+            mess += `${errda} <br>`
+          } else {
+            mess = err.response.data.message
+          }
+          swal(
+            `${mess}`,
+            `Save Failed !`,
+          )
         })
     },
 

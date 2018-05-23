@@ -13,6 +13,7 @@ let vAddagent = (function () {
                       <div :class="['form-group', 'label-floating']">
                         <label class="control-label"></label>
                         <input type="text" v-model="agent.code" name="code" :disabled="editAgent" class="form-control" tabindex="1" />
+                        <span class="help-block">{{errors.code.msg}}</span>
                       </div>
                     </div>
                   </div>

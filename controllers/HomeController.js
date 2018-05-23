@@ -12,7 +12,7 @@ const getIndex = (req, res) => {
   const model = {}
   console.log('user ', req.user)
   if (req.user) {
-    if (req.session.returnTo !== '/') {
+    if (req.session.returnTo !==undefined && req.session.returnTo !== '/') {
       return res.redirect(req.session.returnTo)
     } else {
       return res.redirect('/agent')

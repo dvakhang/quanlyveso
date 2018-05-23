@@ -1,5 +1,6 @@
 const AgentService = require('../services/AgentService')
 const { matchedData } = require('express-validator/filter')
+const { validationResult } = require('express-validator/check')
 
 /**
  * Api get all screens
@@ -64,7 +65,10 @@ const getAgents2Combo = async (req, res, next) => {
 }
 
 const saveAgent = async (req, res) => {
-  // const a = matchedData(req)
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.mapped() })
+  }
   const a = req.body
   //check exist agent code
   let agentMatch;
